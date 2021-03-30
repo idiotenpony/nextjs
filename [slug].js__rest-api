@@ -1,0 +1,27 @@
+import Layout from "../../components/Layout";
+
+const apiPath = "https://react.webworker.berlin/wp-json/wp/v2/";
+
+/* Wenn man einen dynamischen Pfad hat, muss man Next mitteilen,
+welche Pfade das System statisch generieren soll, hier also
+eine Liste der vorhanden Blog-Slugs übergeben. */
+export async function getStaticPaths() {
+  let paths = [];
+
+  try {
+	const response = await fetch(`${apiPath}posts`);
+
+	const posts = await response.json();
+
+	/*	Die Einträge im paths-Array müssen den params entsprechen,
+  	die getStaticProps erhält. */
+	paths = posts.map(({ slug }) => ({ params: { slug } }));
+  } catch (e) {
+	console.log(e);
+  }
+
+  return { paths, fallback: true };
+}
+
+
+export async function getStaticProps(paths){}
